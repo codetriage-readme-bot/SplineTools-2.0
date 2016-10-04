@@ -1,0 +1,63 @@
+{% extends 'splinetools.html' %}
+
+{% block title %} - WHOIS result for {{hostname}}{% endblock title %}
+
+{% block result %}
+	<h2>Result for <span class="target">{{ hostname }}</span></h2>
+	<div class="table-container">
+	<table class="table table-bordered table-striped results">
+	<tr><th>IP addresses</th><td>
+		<ul class="list-inline">
+		{% for ip in ip_list %}
+			<li><a href="{{url_for('ip_whois', ipaddress=ip) }}">{{ ip }}</a></li>
+		{% else %}
+			<li>No corresponding IP addresses could be found.</li>
+		{% endfor %}
+		</ul>
+	</td></tr>
+	<tr><th>Registrar</th><td>
+	{% if whois_result.registrar %}
+		{{ whois_result.registrar.0 }}
+	{% else %}
+		Unknown - no data available
+	{% endif %}
+	</td></tr>
+	{% if whois_result.emails %}
+		<tr><th>Abuse email contact</th><td>{{ whois_result.emails.0 }}</td></tr>
+	{% endif %}
+	<tr><th>Nameservers</th><td>
+		<ul class="list-inline">
+		{% for ns in whois_result.nameservers %}
+			<li><a href="{{url_for('hostname_whois', hostname=ns) }}">{{ ns }}</a></li>
+		{% endfor %}
+		</ul>
+	</td></tr>
+	<tr><th>Last updated at</th><td>
+	{% if whois_result.updated_date %}
+		{{ whois_result.updated_date.0 }}
+	{% else %}
+		Unknown - no data available
+	{% endif %}
+	</td></tr>
+	</table>
+	</div>
+{% for type, contact in whois_result.contacts.iteritems() %}
+	{% if contact %}
+	<h4>{{ type|title }} contact</h4>
+	<div class="table-container">
+	<table class="table table-bordered table-striped results">
+	<tr><th>Name</th><td>{{ contact.name }}</td></tr>
+	<tr><th>Organisation</th><td>{{ contact.organization }}</td></tr>
+	<tr><th>Address</th><td>		
+		{% if contact.street %}{{ contact.street }}<br />{% endif %}
+		{% if contact.city or contact.state %}{{ contact.city|default("",true) }} {{ contact.state|default("",true) }}<br />{% endif %}
+		{% if contact.postalcode %}{{ contact.postalcode }}{% endif %}
+	</td></tr>
+	<tr><th>Email address</th><td>{{ contact.email }}</td></tr>
+	<tr><th>Telephone</th><td>{{ contact.phone }}</td></tr>
+
+	</table>
+	</div>
+	{% endif %}
+{% endfor %}
+{% endblock result %}

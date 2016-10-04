@@ -1,0 +1,15 @@
+Flask>=0.10.1
+Flask-GoogleMaps>=0.1.5
+Jinja2>=2.7.3
+Markdown>=2.5.1
+MarkupSafe>=0.23
+Unidecode>=0.04.16
+Werkzeug>=0.9.6
+ipaddr>=2.1.11
+ipwhois>=0.9.1
+itsdangerous>=0.24
+python-geoip>=1.2
+python-geoip-geolite2>=2014.0207
+pythonwhois>=2.4.3
+tldextract>=1.5.1
+wsgiref>=0.1.2

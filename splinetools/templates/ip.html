@@ -1,0 +1,75 @@
+{% extends 'splinetools.html' %}
+
+{% block title %} - WHOIS result for {{ipaddress}}{% endblock title %}
+
+{% block result %}
+	<h2>Result for <span class="target">{{ ipaddress }}</span></h2>
+<h4>IP details</h4>
+<div class="table-container">
+<table class="table table-bordered table-striped results">
+<tr><th>Hostname</th><td>
+	{% if rdns_hostname %}
+	{{ rdns_hostname }} <span class="aside">(<a href="http://{{ rdns_hostname }}">HTTP :80</a> &bull; <a href="https://{{ rdns_hostname }}">HTTPS :443</a> &bull; <a href="{{ url_for('hostname_whois', hostname=rdns_hostname) }}">WHOIS</a>)</span>
+	{% else %}
+	Could not determine hostname for this IP
+	{% endif %}
+</td></tr>
+<tr><th>Estimated physical location</th><td>
+	{% if ip_location %}
+	{{ googlemap("ip_location", lat=ip_location.0, lng=ip_location.1, markers=[(ip_location.0, ip_location.1)], style="height:300px;width:600px;margin:0 0 0 5px;") }}
+	{% else %}
+	Could not determine location for this IP
+	{% endif %}
+</td></tr>
+</table>
+</div>
+<h4>Network details</h4>
+<div class="table-container">
+<table class="table table-bordered table-striped results">
+{% if extended_result %}
+	<tr><th>Registrant</th><td>{{ whois_result.description }} <span class="aside">(<a target=_BLANK href="https://www.google.com/search?q={{ whois_result.description|urlencode }}">Google this organisation</a>)</span></td></tr>
+	<tr><th>Registrant address</th><td>		
+		{% if whois_result.address %}{{ whois_result.address }}<br />{% endif %}
+		{% if whois_result.city or whois_result.state %}{{ whois_result.city|default("",true) }} {{ whois_result.state|default("",true) }}<br />{% endif %}
+		{% if whois_result.postal_code %}{{ whois_result.postal_code }}{% endif %}
+	</td></tr>
+	
+	{% if whois_result.abuse_emails %}<tr><th>Abuse email contact</th><td>{{ whois_result.abuse_emails|replace("\n",", ") }}</td></tr>{% endif %}
+	{% if whois_result.tech_emails %}<tr><th>Tech email contact</th><td>{{ whois_result.tech_emails|replace("\n",", ") }}</td></tr>{% endif %}
+	{% if whois_result.misc_emails %}<tr><th>Misc email contact</th><td>{{ whois_result.misc_emails|replace("\n",", ") }}</td></tr>{% endif %}
+{% endif %}
+<tr><th><a target=_BLANK href="http://www.cisco.com/web/about/ac123/ac147/archived_issues/ipj_9-1/autonomous_system_numbers.html">Autonomous System Number</a></th>
+	{% if whois_result.asn and whois_result.asn.isdigit() %}
+	<td><a target=_BLANK href="http://www.cidr-report.org/cgi-bin/as-report?as=AS{{ whois_result.asn }}">{{ whois_result.asn }}</a></td>
+	{% else %}
+	<td>{{ whois_result.asn }}</td>
+	{% endif %}
+</tr>
+<tr><th>Network range</th><td>{{ whois_result.asn_cidr }}</td></tr>
+<tr><th>Registry</th><td>{{ whois_result.asn_registry|upper }}</td></tr>
+<tr><th>Assignment date</th><td>{{ whois_result.asn_date }}</td></tr>
+<tr><th>Assignment country</th><td>{{ whois_result.asn_country_code }}</td></tr>
+</table>
+</div>
+{% if whois_result.nets %}
+	<h4>Customer details</h4>
+	{% for net in whois_result.nets %}
+		<div class="table-container">
+		<table class="table table-bordered table-striped results">
+		<tr><th>Customer name</th><td>{{ net.description }} <span class="aside">(<a target=_BLANK href="https://www.google.com/search?q={{ net.description|urlencode }}">Google this organisation</a>)</span></td></tr>
+		<tr><th>Network name</th><td>{{ net.name }}</td></tr>
+		<tr><th>Address</th><td>		
+			{% if net.address %}{{ net.address|replace("\n",", ") }}<br />{% endif %}
+			{% if net.city or net.state %}{{ net.city|default("",true) }} {{ net.state|default("",true) }}<br />{% endif %}
+			{% if net.postal_code %}{{ net.postal_code }}{% endif %}
+		</td></tr>
+		<tr><th>Assigned range</th><td>{{ net.cidr }}</td></tr>
+		{% if net.abuse_emails %}<tr><th>Abuse email contact</th><td>{{ net.abuse_emails|replace("\n",", ") }}</td></tr>{% endif %}
+		{% if net.tech_emails %}<tr><th>Tech email contact</th><td>{{ net.tech_emails|replace("\n",", ") }}</td></tr>{% endif %}
+		{% if net.misc_emails %}<tr><th>Misc email contact</th><td>{{ net.misc_emails|replace("\n",", ") }}</td></tr>{% endif %}
+		</table>
+		</div>
+	{% endfor %}
+{% endif %}
+
+{% endblock result %}

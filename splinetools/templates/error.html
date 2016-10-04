@@ -1,0 +1,13 @@
+{% extends 'splinetools.html' %}
+
+{% block title %} - Error{% endblock title %}
+
+{% block result %}
+	<h2>Sorry, something went wrong here...</h2>
+	<p class="error"><span class="target">{{ error_subject }}</span> {{ error }}</p>
+	{% if rfc %}
+	<p class="aside">(See <a target=_BLANK href="http://www.rfc-editor.org/rfc/{{ rfc }}.txt">here</a> for the text of the RFC in question.)</p>
+	{% elif error_info_url %}
+	<p class="aside">(See <a target=_BLANK href="{{ error_info_url }}">here</a> for more information.)</p>
+	{% endif %}
+{% endblock result %}

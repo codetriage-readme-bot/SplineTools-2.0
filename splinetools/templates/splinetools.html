@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>SplineTools 2.0 {% block title %}{% endblock title %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="{{ url_for('static', filename='bootstrap-theme.min.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='theme.css') }}" rel="stylesheet">
+
+    <script type="text/javascript">
+        $SCRIPT_ROOT = "https://tools.wmflabs.org/myrcx";
+    </script>
+
+    <style>
+        body {
+            background: url('{{ url_for('static', filename='light_noise_diagonal.png') }}') repeat;
+        }
+        
+        .alert {
+            width: 50%;
+            margin: 10px auto;
+        }
+        
+        .container-splinetools .row {
+            margin: 10px auto;
+        }
+        
+        .container.theme-showcase {
+            /*background-color:#eee;
+		border: 1px solid #333;*/
+            border-radius: 10px;
+            width: 50%;
+        }
+        
+        .container-prose {
+            background-color: #fff;
+            border-radius: 5px;
+            border: 1px solid #666;
+            padding: 10px 15px 0 15px;
+        }
+        
+        .page-header {
+            margin-top: 30px;
+        }
+        
+        h4 {
+            margin: 30px auto auto 5px;
+        }
+        
+        span.target {
+            font-weight: bold;
+            font-family: monospace;
+            color: blue;
+        }
+        
+        p {
+            font-size: 120%;
+        }
+        
+        .aside {
+            margin: 0;
+            font-size: 90%;
+        }
+        
+        p span.aside {
+            font-size: 80%;
+        }
+        
+        table .aside {
+            font-size: 80%;
+        }
+        
+        div.table-container {
+            margin: 10px auto;
+            border: 1px solid #ccc;
+        }
+        
+        table.results {
+            margin: 0;
+            background-color: #eee;
+        }
+        
+        table.results th {
+            width: 30%;
+        }
+        
+        .btn-lookup {
+            box-sizing: content-box;
+            width: 110px;
+        }
+        
+        .container-splinetools .dl-horizontal dd {
+            margin-left: 160px;
+        }
+        
+        .container-splinetools .dl-horizontal dt {
+            width: 140px;
+        }
+    </style>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body role="document">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="https://tools.wmflabs.org/myrcx">SplineTools 2.0</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('whois_search') }}">Whois</a></li>
+                    <li><a href="{{ url_for('about') }}">About these tools</a></li>
+                    <!--<li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>-->
+                </ul>
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+    {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
+    <div role="alert" class="alert alert-{{ category|default('info', true) }} alert-dismissible fade in alert-flash">
+        <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p><strong>Note: </strong>{{ message }}</p>
+    </div>
+    {% endfor %} {% endif %} {% endwith %}
+    <div role="alert" id="alert-top" class="alert alert-danger alert-dismissible fade in" style="display:none;">
+        <button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+        <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum.</p>
+    </div>
+    <div class="container theme-showcase" role="main">
+        <div class="page-header">
+            {% block result %} {% endblock result %}
+        </div>
+
+    </div>
+    <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{{ url_for('static', filename='ie10-viewport-bug-workaround.js') }}"></script>
+    {% block script_additions %} {% endblock script_additions %}
+</body>
+
+</html>

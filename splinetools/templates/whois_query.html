@@ -1,0 +1,57 @@
+{% extends 'splinetools.html' %}
+
+{% block title %} - WHOIS{% endblock title %}
+
+{% block result %}
+<h2>Perform a WHOIS query</h2>
+<div class="container-fluid container-splinetools">
+<div class="row">
+	<div class="col-lg-8 col-lg-offset-2">
+		<div class="input-group">
+		  <input type="text" placeholder="Enter an IP (v4 or v6) address" id="input-ip" class="form-control">
+		  <span class="input-group-btn">
+			<button class="btn btn-default btn-lookup" id="btn-ip" type="button">IP lookup</button>
+		  </span>
+		</div><!-- /input-group -->
+	</div><!-- /.col-lg-6 -->
+</div>
+
+<div class="row">
+	<div class="col-lg-8 col-lg-offset-2">
+		<div class="input-group">
+		  <input type="text" placeholder="Enter a FQDN" id="input-domain" class="form-control">
+		  <span class="input-group-btn">
+			<button class="btn btn-default btn-lookup" id="btn-domain" type="button">Domain lookup</button>
+		  </span>
+		</div><!-- /input-group -->
+	</div><!-- /.col-lg-6 -->
+</div>
+</div>
+{% endblock result %}
+
+{% block script_additions %}
+	<script type="text/javascript">
+		function handleSubmission(event){
+			var submitted_val = $("#input-"+event.data.type).val().replace(/ /g,'');
+			if (submitted_val === "" || submitted_val === undefined){
+				$(this).parents(".input-group").addClass("has-error");
+				$("#alert-top p").text("Please enter a value.");
+				$("#alert-top").show();
+			} else{
+				window.location.href = $SCRIPT_ROOT + "/whois/" + event.data.type +"/" + submitted_val;
+			}
+		}
+		
+		function dispatchIfEnter(event){
+			 var code = event.keyCode || event.which;
+			 if(code == 13) { //13 == Enter key
+			   event.data.fn(event);
+			 }
+		}
+		$("#btn-ip").on("click", { type: "ip" }, handleSubmission);
+		$("#input-ip").on("keypress", { type: "ip", fn: handleSubmission }, dispatchIfEnter);
+		
+		$("#btn-domain").on("click", { type: "domain" }, handleSubmission);
+		$("#input-domain").on("keypress", { type: "domain", fn: handleSubmission }, dispatchIfEnter);
+	</script>
+{% endblock script_additions %}

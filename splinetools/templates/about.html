@@ -1,0 +1,13 @@
+{% extends 'splinetools.html' %} {% block title %} - About{% endblock title %} {% block result %}
+<h2>About</h2>
+<div class="container-fluid container-splinetools container-prose">
+    <p>Hello! These tools were created by Reticulated Spline back in the day, and have been revived by Samtar; if you have any queries or suggestions, please <a href='https://en.wikipedia.org/wiki/User talk:Samtar'>leave me a message</a>
+</div>
+<h2>List of tools</h2>
+<div class="container-fluid container-splinetools container-prose">
+    <dl class="dl-horizontal">
+        <dt><a href="{{ url_for('whois_search') }}">Whois</a></dt>
+        <dd>a WHOIS service capable of returning records for hostnames and IP addresses, including forward and reverse DNS resolution. Useful for checking out shared IPs, or determining where a particular IP editor might be geographically.</dd>
+    </dl>
+</div>
+{% endblock result %} {% block script_additions %} {% endblock script_additions %}
